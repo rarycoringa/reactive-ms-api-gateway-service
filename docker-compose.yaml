@@ -1,0 +1,12 @@
+services:
+  gateway:
+    build: .
+    container_name: gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - dist-sys-ms-network
+
+networks:
+  dist-sys-ms-network:
+    external: true
