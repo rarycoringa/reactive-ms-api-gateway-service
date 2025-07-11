@@ -6,26 +6,34 @@ spring:
             discovery:
                 enabled: true
                 service-id: config
-        loadbalancer:
-            ribbon:
-                enabled: false
         gateway:
             discovery:
                 locator:
                     enabled: true
                     lower-case-service-id: true
+            default-filters:
+                - name:
+                    args:
+                        retries: 3
+                        methods: GET,POST
+                        statuses: BAD_GATEWAY
+                        backoff:
+                            firstBackoff: 10ms
+                            maxBackoff: 50ms
+                            factor: 2
+                            basedOnPreviousValue: false
     config:
         import: "optional:configserver:"
 
 server:
-    port: 8080
+    port: ${SERVER_PORT:8080}
 
 eureka:
     client:
         fetch-registry: true
         register-with-eureka: true
         service-url:
-            defaultZone: http://discovery1:8761/eureka,http://discovery2:8762/eureka,http://discovery3:8763/eureka
+            defaultZone: http://discovery1:8761/eureka,http://discovery2:8762/eureka
     instance:
         prefer-ip-address: true
 
